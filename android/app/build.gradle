@@ -1,0 +1,38 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+android {
+    namespace = "com.example.messenger"
+    compileSdk = 35         // replace flutter.compileSdkVersion
+    ndkVersion = "26.3.11579264" // optional, or remove if causing issues
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    defaultConfig {
+        applicationId = "com.example.messenger"
+        minSdk = 21              // replace flutter.minSdkVersion
+        targetSdk = 34           // replace flutter.targetSdkVersion
+        versionCode = 1          // replace flutter.versionCode
+        versionName = "1.0"      // replace flutter.versionName
+    }
+
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}
