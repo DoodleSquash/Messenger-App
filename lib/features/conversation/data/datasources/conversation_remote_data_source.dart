@@ -8,4 +8,4 @@ class ConversationRemoteDataSource {
   final _storage = FlutterSecureStorage();
 }
 
-Future<List<ConversationModel>> fetchco
+

@@ -24,9 +24,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         event.email,
         event.password,
       );
+      print("User registered: $user");
       emit(AuthSuccess(message: "Registration successful"));
     } catch (e) {
-      
+      print("Registration error: $e");
       emit(AuthFailure(error: "Registration failed: $e"));
     }
   }

@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.darkTheme,
         debugShowCheckedModeBanner: false,
       
-        home: LoginPage(),
+        home: RegisterPage(),
         routes: {
           '/login': (_) => LoginPage(),
           '/register': (_) => RegisterPage(),
