@@ -87,7 +87,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
                         return _buildMessageTile(
                           conversation.participantName,
                           conversation.lastMessage,
-                          conversation.lastMessageTime,
+                          conversation.lastMessageTime.toString(),
                         );
                       });
                 }
