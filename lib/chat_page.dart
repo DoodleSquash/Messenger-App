@@ -1,63 +1,73 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:messenger/core/theme.dart';
+import 'package:messenger/features/chat/presentation/bloc/chat_bloc.dart';
 
-class ChatPage extends StatelessWidget {
-  const ChatPage({super.key});
+class ChatPage extends StatefulWidget {
+  final String conversationId;
+  const ChatPage({super.key, required this.conversationId});
+
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  final TextEditingController _messageController = TextEditingController();
+  final _storage = FlutterSecureStorage();
+  String _userId = "";
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<ChatBloc>(context).add(LoadMessagesEvent(widget.conversationId));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            CircleAvatar(
-              backgroundImage: NetworkImage('https://cdn-icons-png.flaticon.com/512/3177/3177440.png'),
-
-            ),
-            SizedBox(width: 10),
-            Text(
-              'Aditya',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+        appBar: AppBar(
+          title: Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage(
+                    'https://cdn-icons-png.flaticon.com/512/3177/3177440.png'),
+              ),
+              SizedBox(width: 10),
+              Text(
+                'Aditya',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ],
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                // Handle search action
+              },
+              color: Colors.white,
+            )
           ],
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // Handle search action
-            },
-            color: Colors.white,
-          )
-        ],
-      ),
-
-      body: Column(
-        children: [
+        body: Column(children: [
           Expanded(
-            child:ListView(
-            padding: EdgeInsets.all(20),
-            children: [
-              _buildReceivedMessage( context,"hey my self aditya"),
-              _buildSentMessage( context," hi"),
-              _buildReceivedMessage( context,"how are you?"),
-              _buildSentMessage( context,"  i am fine"),
-              _buildReceivedMessage( context," ✌"),
-            ],
-           
+            child: ListView(
+              padding: EdgeInsets.all(20),
+              children: [
+                _buildReceivedMessage(context, "hey my self aditya"),
+                _buildSentMessage(context, " hi"),
+                _buildReceivedMessage(context, "how are you?"),
+                _buildSentMessage(context, "  i am fine"),
+                _buildReceivedMessage(context, " ✌"),
+              ],
             ),
-
           ),
-           _buildMessageInput(context),
-
-
-        ]
-      )
-    );    
+          _buildMessageInput(context),
+        ]));
   }
-
 
   Widget _buildReceivedMessage(BuildContext context, String message) {
     return Align(
@@ -77,7 +87,7 @@ class ChatPage extends StatelessWidget {
     );
   }
 
-    Widget _buildSentMessage(BuildContext context, String message) {
+  Widget _buildSentMessage(BuildContext context, String message) {
     return Align(
       alignment: Alignment.centerRight,
       child: Container(
@@ -103,7 +113,6 @@ class ChatPage extends StatelessWidget {
         color: DefaultColors.sentMessageInput,
         borderRadius: BorderRadius.circular(25),
       ),
-
       child: Row(
         children: [
           GestureDetector(
@@ -137,7 +146,6 @@ class ChatPage extends StatelessWidget {
             },
           ),
         ],
-
       ),
     );
   }
