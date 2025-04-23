@@ -35,14 +35,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onLogin(LoginEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     try {
+      print("Calling loginUseCase...");
       final user = await loginUseCase.call(
         event.email,
         event.password,
       );
+      print("Login successful, user: $user");
+      print("Token: ${user.token}");
+
       await _storage.write(key: 'token', value: user.token);
-      print('token: ${user.token}');
+      await _storage.write(key: 'userId', value: user.id);
+      print("Token saved to storage: ${user.token}");
       emit(AuthSuccess(message: "Login successful"));
     } catch (e) {
+      print("Login failed: $e");
       emit(AuthFailure(error: "Login failed"));
     }
   }

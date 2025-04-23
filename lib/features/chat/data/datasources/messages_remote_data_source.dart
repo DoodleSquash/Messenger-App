@@ -6,7 +6,7 @@ import 'package:messenger/features/chat/data/models/message_model.dart';
 import 'package:messenger/features/chat/domain/entities/message_entity.dart';
 
 class MessagesRemoteDataSource {
-  final String baseUrl = 'http://localhost:6000';
+  final String baseUrl = 'http://192.168.0.109:6000';
   final _storage = FlutterSecureStorage();
 
   Future<List<MessageEntity>> fetchMessages(String conversationId) async {
@@ -17,14 +17,18 @@ class MessagesRemoteDataSource {
 
     final response = await http.get(
       Uri.parse('$baseUrl/messages/$conversationId'),
-      headers: {'Authorization':' Bearer $token',}
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
     );
+
+ 
+
     if (response.statusCode == 200) {
-      List data = jsonDecode(response.body); 
+      List data = jsonDecode(response.body);
       return data.map((json) => MessageModel.fromJson(json)).toList();
-      }else{
-        
-        throw Exception( 'Failed to load messages');
-      }
-}
+    } else {
+      throw Exception('Failed to fetch messages');
+    }
+  }
 }

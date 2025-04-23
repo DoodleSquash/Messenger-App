@@ -14,8 +14,9 @@ class SocketService {
 
   Future<void> initSocket() async {
     String token = await _storage.read(key: 'token') ?? '';
+
     _socket = IO.io(
-      'http://localhost:6000',
+      'http://192.168.0.109:6000',
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .disableAutoConnect()
@@ -32,7 +33,6 @@ class SocketService {
       print('Socket disconnected');
     });
   }
-
 
   IO.Socket get socket => _socket;
 }
