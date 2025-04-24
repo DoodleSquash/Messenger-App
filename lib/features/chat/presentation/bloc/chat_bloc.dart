@@ -21,7 +21,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   Future<void> _onLoadMessages(
       LoadMessagesEvent event, Emitter<ChatState> emit) async {
     emit(ChatLoadingState());
-    try { 
+    try {
       final messages = await fetchMessagesUseCase(event.conversationId);
       _messages.clear();
       _messages.addAll(messages);
@@ -46,9 +46,22 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       'senderId': userId,
     };
 
+    // Emit the message to the server
     _socketService.socket.emit('sendMessage', newMessage);
-    emit(ChatLoadedState(List.from(_messages)));
 
+    // Add the new message to the local list
+    final messageEntity = MessageEntity(
+      id: DateTime.now().toString(), // Temporary ID
+      conversationId: event.conversationId,
+      senderId: userId,
+      content: event.content,
+      createdAt: DateTime.now(),
+    );
+    _messages.add(messageEntity);
+
+    // Emit the updated state
+    emit(ChatLoadedState(List.from(_messages)));
+    
   }
 
   Future<void> _onReceiveMessages(
