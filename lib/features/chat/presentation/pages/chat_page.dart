@@ -5,6 +5,8 @@ import 'package:messenger/core/theme.dart';
 import 'package:messenger/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:messenger/features/chat/presentation/bloc/chat_event.dart';
 import 'package:messenger/features/chat/presentation/bloc/chat_state.dart';
+import 'package:messenger/features/conversation/presentation/bloc/conversations_bloc.dart';
+import 'package:messenger/features/conversation/presentation/bloc/conversations_event.dart';
 
 class ChatPage extends StatefulWidget {
   final String conversationId;
@@ -17,6 +19,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   final _storage = FlutterSecureStorage();
   String userId = "";
 
@@ -38,6 +41,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void dispose() {
     _messageController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -46,7 +50,21 @@ class _ChatPageState extends State<ChatPage> {
     if (content.isNotEmpty) {
       BlocProvider.of<ChatBloc>(context)
           .add(SendMessageEvent(widget.conversationId, content));
+
+      // Notify ConversationsBloc to refresh
+      BlocProvider.of<ConversationsBloc>(context).add(FetchConversations());
+
       _messageController.clear();
+    }
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
     }
   }
 
@@ -75,18 +93,21 @@ class _ChatPageState extends State<ChatPage> {
                 if (state is ChatLoadingState) {
                   return Center(child: CircularProgressIndicator());
                 } else if (state is ChatLoadedState) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _scrollToBottom();
+                  });
                   return ListView.builder(
+                    controller: _scrollController,
                     padding: EdgeInsets.all(20),
                     itemCount: state.messages.length,
                     itemBuilder: (context, index) {
                       final message = state.messages[index];
                       final isSentMessage = message.senderId == userId;
                       if (isSentMessage) {
-                       return  _buildSentMessage(context, message.content);
-                      }else {
+                        return _buildSentMessage(context, message.content);
+                      } else {
                         return _buildReceivedMessage(context, message.content);
                       }
-                     
                     },
                   );
                 } else if (state is ChatErrorState) {
