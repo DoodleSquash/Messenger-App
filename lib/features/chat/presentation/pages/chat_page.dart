@@ -52,7 +52,7 @@ class _ChatPageState extends State<ChatPage> {
           .add(SendMessageEvent(widget.conversationId, content));
 
       // Notify ConversationsBloc to refresh
-      BlocProvider.of<ConversationsBloc>(context).add(FetchConversations());
+      // BlocProvider.of<ConversationsBloc>(context).add(FetchConversations());
 
       _messageController.clear();
     }

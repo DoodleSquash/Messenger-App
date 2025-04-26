@@ -18,6 +18,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<ReceiveMessageEvent>(_onReceiveMessages);
   }
 
+
+  
   Future<void> _onLoadMessages(
       LoadMessagesEvent event, Emitter<ChatState> emit) async {
     emit(ChatLoadingState());
@@ -28,13 +30,17 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       emit(ChatLoadedState(List.from(_messages)));
 
       _socketService.socket.emit('joinConversation', event.conversationId);
-      _socketService.socket.on('NewMessage', (data) {
+      _socketService.socket.on('newMessage', (data) {
+        print("step1 - recive:$data");
         add(ReceiveMessageEvent(data));
       });
     } catch (e) {
       emit(ChatErrorState('Failed to load messages'));
     }
   }
+
+
+
 
   Future<void> _onSendMessages(
       SendMessageEvent event, Emitter<ChatState> emit) async {
@@ -49,32 +55,37 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     // Emit the message to the server
     _socketService.socket.emit('sendMessage', newMessage);
 
-    // Add the new message to the local list
-    final messageEntity = MessageEntity(
-      id: DateTime.now().toString(), // Temporary ID
-      conversationId: event.conversationId,
-      senderId: userId,
-      content: event.content,
-      createdAt: DateTime.now(),
-    );
-    _messages.add(messageEntity);
+    // // Add the new message to the local list
+    // final messageEntity = MessageEntity(
+    //   id: DateTime.now().toString(), // Temporary ID
+    //   conversationId: event.conversationId,
+    //   senderId: userId,
+    //   content: event.content,
+    //   createdAt: DateTime.now(),
+    // );
+    // _messages.add(messageEntity);
 
-    // Emit the updated state
-    emit(ChatLoadedState(List.from(_messages)));
-    
+    // // Emit the updated state
+    // emit(ChatLoadedState(List.from(_messages)));
   }
 
   Future<void> _onReceiveMessages(
       ReceiveMessageEvent event, Emitter<ChatState> emit) async {
+    print("step2 - receive event called");
+    print(event.message);
     final message = MessageEntity(
       id: event.message['id'],
-      conversationId: event.message['conversationId'],
-      senderId: event.message['senderId'],
+      conversationId: event.message['conversation_id'],
+      senderId: event.message['sender_id'],
       content: event.message['content'],
-      createdAt: event.message['createdAt'],
+      createdAt: (
+          event.message['created_at']), // Assuming 'createdAt' is a string
     );
 
+    // Add the received message to the list
     _messages.add(message);
+
+    // Emit the updated state to trigger a UI update
     emit(ChatLoadedState(List.from(_messages)));
   }
 }
