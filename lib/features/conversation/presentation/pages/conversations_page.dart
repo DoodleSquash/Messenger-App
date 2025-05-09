@@ -115,6 +115,19 @@ class _ConversationsPageState extends State<ConversationsPage> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => ContactsPage(
+          //     ),
+          //   ),
+          // );
+        },
+        backgroundColor: DefaultColors.buttonColor,
+        child: Icon(Icons.contacts, color: Colors.white),
+      ),
     );
   }
 }
