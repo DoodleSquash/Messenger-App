@@ -12,6 +12,8 @@ class ContactsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Contacts'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: BlocBuilder<ContactsBloc, ContactsState>(
         builder: (context, state) {
@@ -53,7 +55,9 @@ class ContactsPage extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Add Contact'),
+          backgroundColor: Colors.red,
+          title: Text('Add Contact',
+              style: Theme.of(context).textTheme.bodyMedium),
           content: TextField(
             controller: emailController,
             decoration: InputDecoration(hintText: 'Enter contact email'),
@@ -74,7 +78,10 @@ class ContactsPage extends StatelessWidget {
                 }
                 Navigator.pop(context);
               },
-              child: Text('Add'),
+              child: Text('Add',
+              style: Theme.of(context).textTheme.bodyMedium
+              ),
+
             ),
           ],
         );

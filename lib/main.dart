@@ -20,6 +20,8 @@ import 'package:messenger/features/auth/presentation/pages/login_page.dart';
 import 'package:messenger/features/auth/presentation/pages/register_page.dart';
 import 'package:messenger/features/contacts/data/datasources/contacts_remote_data_source.dart';
 import 'package:messenger/features/contacts/data/repositories/contacts_repository_impl.dart';
+import 'package:messenger/features/contacts/domain/usecases/add_contacts_usecase.dart';
+import 'package:messenger/features/contacts/domain/usecases/fetch_contacts_usecase.dart';
 import 'package:messenger/features/contacts/presentation/bloc/contacts_bloc.dart';
 import 'package:messenger/features/contacts/presentation/bloc/contacts_event.dart';
 import 'package:messenger/features/conversation/data/datasources/conversation_remote_data_source.dart';
@@ -86,7 +88,7 @@ class MyApp extends StatelessWidget {
         ),
          BlocProvider(
           create: (_) => ContactsBloc(
-           fetchContactsUsecase:  FetchContactsUseCase(contactsRepository: contactsRepository),
+           fetchContactsUsecase:  FetchContactsUsecase(contactsRepository: contactsRepository),
            addContactUseCase: AddContactUseCase(contactsRepository: contactsRepository),
             
           ),

@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:messenger/features/contacts/domain/usecases/add_contact_usecase.dart';
+import 'package:messenger/features/contacts/domain/usecases/add_contacts_usecase.dart';
 import 'package:messenger/features/contacts/domain/usecases/fetch_contacts_usecase.dart';
 import 'package:messenger/features/contacts/presentation/bloc/contacts_event.dart';
 import 'package:messenger/features/contacts/presentation/bloc/contacts_state.dart';
