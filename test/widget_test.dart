@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:messenger/features/chat/data/datasources/messages_remote_data_source.dart';
 import 'package:messenger/features/chat/data/repositories/message_repository_impl.dart';
+import 'package:messenger/features/contacts/data/datasources/contacts_remote_data_source.dart';
+import 'package:messenger/features/contacts/data/repositories/contacts_repository_impl.dart';
 import 'package:messenger/features/conversation/data/datasources/conversation_remote_data_source.dart';
 import 'package:messenger/features/conversation/data/repositories/conversations_repository_impl.dart';
 
@@ -31,8 +33,15 @@ void main() {
       remoteDataSource: MessagesRemoteDataSource(),
     );
 
+    
+    final contactsRepository = ContactsRepositoryImpl(
+      remoteDataSource: ContactsRemoteDataSource(),
+    );
+
+
+
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp(authRepository: authRepository, conversationsRepository:conversationsRepository, messagesRepository: messagesRepository,));
+    await tester.pumpWidget(MyApp(authRepository: authRepository, conversationsRepository:conversationsRepository, messagesRepository: messagesRepository, contactsRepository: contactsRepository,));
 
     // Since this is not a counter app, remove the old test code
     expect(find.byType(MaterialApp), findsOneWidget);
